@@ -242,4 +242,5 @@ def boucle_principale():
             print("\nMerci d'avoir joué ! À bientôt !")
 
 
-boucle_principale()
+if __name__ == "__main__":
+    boucle_principale()
