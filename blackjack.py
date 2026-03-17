@@ -139,3 +139,21 @@ def tour_joueur(main_joueur, paquet):
         print("\n💥 Vous avez dépassé 21 ! Vous avez sauté !") 
 
     return a_saute 
+
+
+def tour_croupier(main_croupier, paquet):
+    print("\n🎰 Tour du croupier...")
+    afficher_main(main_croupier, "Croupier")
+
+    while calculer_score(main_croupier) < 17:
+        nouvelle_carte = tirer_carte(paquet) 
+        main_croupier.append(nouvelle_carte) 
+        print(f"\n  Le croupier tire : {afficher_carte(nouvelle_carte)}") 
+
+    afficher_main(main_croupier, "Croupier")
+    a_saute = calculer_score(main_croupier) > 21
+    if a_saute:
+        print("\n💥 Le croupier a dépassé 21 ! Il a sauté !")
+
+    return a_saute
+
