@@ -221,3 +221,25 @@ def jouer_partie():
         return
 
     determiner_gagnant(main_joueur, main_croupier)
+
+
+def boucle_principale():
+    print("##########################################")
+    print("      JEU DE BLACKJACK EN PYTHON")
+    print("    Essayez de battre le croupier !")
+    print("##########################################")
+
+    continuer = True  
+
+    while continuer: 
+        jouer_partie()
+
+        print("\n" + "-" * 40)
+        reponse = input("Voulez-vous rejouer ? (O/N) : ")
+
+        if reponse != 'O':
+            continuer = False  
+            print("\nMerci d'avoir joué ! À bientôt !")
+
+
+boucle_principale()
