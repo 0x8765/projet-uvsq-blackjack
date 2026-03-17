@@ -99,3 +99,13 @@ def afficher_main(main, cacher_deuxieme=False):
     if not cacher_deuxieme: 
         score = calculer_score(main) 
         print(f"  → Score : {score}") 
+
+def distribuer_cartes_initiales(paquet):
+    main_joueur = [] 
+    main_croupier = [] 
+
+    for i in range(2): 
+        main_joueur.append(tirer_carte(paquet)) 
+        main_croupier.append(tirer_carte(paquet)) 
+
+    return main_joueur, main_croupier 
