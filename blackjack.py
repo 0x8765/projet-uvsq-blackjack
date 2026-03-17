@@ -30,3 +30,17 @@ def tirer_carte(paquet):
     Renvoie le dernier tuple de la liste et le supprime
     """
     return paquet.pop()
+
+def valeur_carte(carte):
+    """
+    Prend en paramètre un tuple qui correspond a une carte
+    Renvoie la valeur de la carte sous forme d'entier
+    """
+    nom = carte[0] 
+
+    if nom in ['Valet', 'Dame', 'Roi']: 
+        return 10
+    elif nom == 'As': 
+        return 11  
+    else:
+        return int(nom)
