@@ -44,3 +44,23 @@ def valeur_carte(carte):
         return 11  
     else:
         return int(nom)
+
+
+def calculer_score(main):
+    """
+    Prend en paramètre une liste de tuple qui correspond a une main
+    Renvoie le score de la main sous forme d'entier
+    """
+    score = 0 
+    nombre_as = 0  
+
+    for carte in main: 
+        score += valeur_carte(carte) 
+        if carte[0] == 'As': 
+            nombre_as += 1 
+    
+    while score > 21 and nombre_as > 0: 
+        score -= 10       
+        nombre_as -= 1   
+
+    return score 
