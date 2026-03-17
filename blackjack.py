@@ -157,3 +157,35 @@ def tour_croupier(main_croupier, paquet):
 
     return a_saute
 
+def determiner_gagnant(main_joueur, main_croupier):
+    score_joueur = calculer_score(main_joueur)
+    score_croupier = calculer_score(main_croupier)
+
+    bj_joueur = est_blackjack(main_joueur)         
+    bj_croupier = est_blackjack(main_croupier)     
+
+    print("\n")
+    print("=" * 40)
+    print("        RÉSULTAT FINAL")
+    print("=" * 40)
+    print(f"  Joueur   : {score_joueur} points")
+    print(f"  Croupier : {score_croupier} points")
+    print("=" * 40)
+
+    if bj_joueur and bj_croupier:
+        print("Égalité ! Les deux ont un Blackjack !")
+
+    elif bj_joueur:
+        print("BLACKJACK ! Vous gagnez avec un Blackjack naturel !")
+
+    elif bj_croupier:
+        print("Le croupier a un Blackjack. Vous perdez.")
+
+    elif score_joueur > score_croupier:
+        print("Félicitations ! Vous gagnez !")
+
+    elif score_croupier > score_joueur:
+        print("Le croupier gagne. Vous perdez.")
+
+    else:
+        print("Égalité ! Personne ne gagne.")
