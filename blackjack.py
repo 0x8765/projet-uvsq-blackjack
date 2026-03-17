@@ -23,3 +23,10 @@ def melanger_paquet(paquet):
     Mélange la liste en place
     """
     random.shuffle(paquet)
+
+def tirer_carte(paquet):
+    """
+    Prend en paramètre une liste de tuple
+    Renvoie le dernier tuple de la liste et le supprime
+    """
+    return paquet.pop()
