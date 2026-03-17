@@ -109,3 +109,33 @@ def distribuer_cartes_initiales(paquet):
         main_croupier.append(tirer_carte(paquet)) 
 
     return main_joueur, main_croupier 
+
+def tour_joueur(main_joueur, paquet):
+    while True:
+        score = calculer_score(main_joueur)
+
+        if score >= 21:
+            break
+
+        print("\nQue voulez-vous faire ?")
+        print("  [T] Tirer une carte")
+        print("  [R] Rester")
+
+        choix = input("Votre choix : ")
+
+        if choix == 'T': 
+            nouvelle_carte = tirer_carte(paquet) 
+            main_joueur.append(nouvelle_carte) 
+            print(f"\n  Vous tirez : {afficher_carte(nouvelle_carte)}") 
+            afficher_main(main_joueur, "Joueur") 
+        elif choix == 'R': 
+            print("\nVous décidez de rester.") 
+            break 
+        else:
+            print("Choix invalide. Tapez 'T' pour tirer ou 'R' pour rester.")
+
+    a_saute = calculer_score(main_joueur) > 21 
+    if a_saute: 
+        print("\n💥 Vous avez dépassé 21 ! Vous avez sauté !") 
+
+    return a_saute 
