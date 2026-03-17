@@ -189,3 +189,35 @@ def determiner_gagnant(main_joueur, main_croupier):
 
     else:
         print("Égalité ! Personne ne gagne.")
+
+
+def jouer_partie():
+    print("\n")
+    print("=" * 40)
+    print("   ♠ ♥ BIENVENUE AU BLACKJACK ♦ ♣")
+    print("=" * 40)
+
+    paquet = creer_paquet() 
+    melanger_paquet(paquet) 
+
+    main_joueur, main_croupier = distribuer_cartes_initiales(paquet) 
+    afficher_main(main_joueur, "Joueur")
+    afficher_main(main_croupier, "Croupier", cacher_deuxieme=True)
+
+    if est_blackjack(main_joueur) or est_blackjack(main_croupier):
+        determiner_gagnant(main_joueur, main_croupier)
+        return
+
+    joueur_a_saute = tour_joueur(main_joueur, paquet)
+
+    if joueur_a_saute:
+        print("\n😔 Le croupier gagne car vous avez dépassé 21.")
+        return
+
+    croupier_a_saute = tour_croupier(main_croupier, paquet)
+
+    if croupier_a_saute:
+        print("\n🎉 Vous gagnez car le croupier a dépassé 21 !")
+        return
+
+    determiner_gagnant(main_joueur, main_croupier)
