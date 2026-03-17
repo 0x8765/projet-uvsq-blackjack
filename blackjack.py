@@ -64,3 +64,38 @@ def calculer_score(main):
         nombre_as -= 1   
 
     return score 
+
+
+def est_blackjack(main):
+    """
+    Prend en paramètre une liste de tuple qui correspond a une main
+    Renvoie True si la main est un blackjack, False sinon
+    """
+    blackjack = False 
+
+    if len(main) == 2 and calculer_score(main) == 21: 
+        blackjack = True 
+    
+    return blackjack 
+
+
+def afficher_carte(carte):
+    """
+    Prend en paramètre un tuple qui correspond a une carte
+    Renvoie une chaine de caractere qui correspond a la carte et a son score
+    """
+    return f"{carte[0]} de {carte[1]}"
+
+
+def afficher_main(main, cacher_deuxieme=False):
+    print("\n--- Main du joueur ---")
+
+    for i, carte in enumerate(main): 
+        if cacher_deuxieme and i == 1: 
+            print("  [Carte cachée]") 
+        else:
+            print(f"  {afficher_carte(carte)}") 
+
+    if not cacher_deuxieme: 
+        score = calculer_score(main) 
+        print(f"  → Score : {score}") 
