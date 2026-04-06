@@ -41,7 +41,7 @@ python blackjack.py
 
 ### Fait par
 
-**Victor Lepin**
-**Maceo Teboul**
-**Ayah Moursi**
-**Samuel ?**
+**Victor Lepin**, 
+**Maceo Teboul**, 
+**Ayah Moursi**, 
+**Samuel ?**, 
