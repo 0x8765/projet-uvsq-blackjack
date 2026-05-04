@@ -1,3 +1,12 @@
+####################
+#
+# Projet Info UVSQ
+# Blackjack
+# Victor, Maceo, Ayah, Sammuel
+#
+####################
+
+
 import random
 import tkinter as tk
 
@@ -21,8 +30,6 @@ def creer_paquet():
     ]
     couleurs = ["Coeur", "Carreau", "Trefle", "Pique"]
     paquet = []
-
-    # boucle qui parcours les couleurs et pour chaque couleur attribut les 13 types de cartes
     for couleur in couleurs:
         for valeur in valeurs:
             paquet.append((valeur, couleur))
@@ -69,26 +76,16 @@ def est_blackjack(main):
     return len(main) == 2 and calculer_score(main) == 21
 
 
-def texte_main(main, cacher_deuxieme=False):
-    """Retourne le texte a afficher pour une main. Peut cacher la 2eme carte (pour le croupier)."""
-    lignes = []
-    for i, carte in enumerate(main):
-        if cacher_deuxieme and i == 1:
-            lignes.append("  [Carte cachee]")
-        else:
-            lignes.append(f"  {carte[0]} de {carte[1]}")
-    if not cacher_deuxieme:
-        lignes.append(f"  Score : {calculer_score(main)}")
-    return "\n".join(lignes)
-
-
 def determiner_message(main_joueur, main_croupier):
     """Compare les deux mains et retourne le message de resultat et sa couleur."""
+
+    # recuperation des variables
     score_joueur = calculer_score(main_joueur)
     score_croupier = calculer_score(main_croupier)
     bj_joueur = est_blackjack(main_joueur)
     bj_croupier = est_blackjack(main_croupier)
 
+    # renvoie du message en fonction du score
     if score_joueur > 21:
         return "Vous avez depasse 21 ! Le croupier gagne.", "red"
     if score_croupier > 21:
@@ -106,23 +103,97 @@ def determiner_message(main_joueur, main_croupier):
     return f"Egalite ! ({score_joueur} = {score_croupier})", "orange"
 
 
-# variables qui vont etres utilisées pour le jeu, a declarer ici pour le contexte
-
+# variables globales de la partie
 paquet = []
 main_joueur = []
 main_croupier = []
-
-label_joueur = None
-label_croupier = None
+cadre_cartes_joueur = None
+cadre_cartes_croupier = None
+label_score_joueur = None
+label_score_croupier = None
 label_message = None
 bouton_tirer = None
 bouton_rester = None
 
+# Symboles et couleurs pour chaque couleur de carte
+SYMBOLES = {
+    "Coeur": ("♥", "red"),
+    "Carreau": ("♦", "red"),
+    "Trefle": ("♣", "black"),
+    "Pique": ("♠", "black"),
+}
+
+
+def creer_widget_carte(parent, carte):
+    """Cree et retourne un widget carte (un Frame blanc avec valeur et symbole)."""
+    valeur, couleur = carte
+    symbole, couleur_texte = SYMBOLES[couleur]
+
+    # Raccourcit les noms longs pour que la carte reste petite
+    abreviations = {"Valet": "V", "Dame": "D", "Roi": "R", "As": "A"}
+    valeur_affichee = abreviations.get(valeur, valeur)
+
+    # creation d'un frame blanc qui sert de background pour la carte
+    cadre = tk.Frame(parent, bg="white", relief="raised", bd=2, width=60, height=90)
+    cadre.pack_propagate(False)  # garde la taille fixe
+
+    # ajout de la valeur et couleur de la carte dans le cadre
+    tk.Label(
+        cadre,
+        text=valeur_affichee,
+        font=("Helvetica", 12, "bold"),
+        fg=couleur_texte,
+        bg="white",
+        anchor="nw",
+    ).pack(anchor="nw", padx=4, pady=2)
+
+    tk.Label(
+        cadre, text=symbole, font=("Helvetica", 22), fg=couleur_texte, bg="white"
+    ).pack(expand=True)
+
+    return cadre
+
+
+def creer_widget_carte_cachee(parent):
+    """Cree et retourne un widget pour la carte cachee du croupier (dos de carte)."""
+    cadre = tk.Frame(parent, bg="#2244aa", relief="raised", bd=2, width=60, height=90)
+    cadre.pack_propagate(False)
+
+    tk.Label(
+        cadre, text="?", font=("Helvetica", 30, "bold"), fg="white", bg="#2244aa"
+    ).pack(expand=True)
+
+    return cadre
+
+
+def vider_cadre(cadre):
+    """Supprime tous les widgets enfants d'un cadre."""
+    for widget in cadre.winfo_children():
+        widget.destroy()
+
 
 def afficher_mains(cacher_deuxieme):
-    """Met a jour les labels des mains dans la fenetre."""
-    label_joueur.config(text=texte_main(main_joueur))
-    label_croupier.config(text=texte_main(main_croupier, cacher_deuxieme))
+    """Vide et reconstruit les zones de cartes du joueur et du croupier."""
+    # Cartes du joueur
+    vider_cadre(cadre_cartes_joueur)
+    for carte in main_joueur:
+        widget = creer_widget_carte(cadre_cartes_joueur, carte)
+        widget.pack(side="left", padx=4)
+    label_score_joueur.config(text=f"Score : {calculer_score(main_joueur)}")
+
+    # Cartes du croupier
+    vider_cadre(cadre_cartes_croupier)
+    for i, carte in enumerate(main_croupier):
+        if cacher_deuxieme and i == 1:
+            widget = creer_widget_carte_cachee(cadre_cartes_croupier)
+        else:
+            widget = creer_widget_carte(cadre_cartes_croupier, carte)
+        widget.pack(side="left", padx=4)
+
+    if cacher_deuxieme:
+        label_score_croupier.config(text="Score : ?")
+    else:
+        label_score_croupier.config(text=f"Score : {calculer_score(main_croupier)}")
 
 
 def desactiver_boutons():
@@ -146,6 +217,7 @@ def nouvelle_partie():
     main_joueur = []
     main_croupier = []
 
+    # distribuer 2 cartes au joueur et au croupier
     for i in range(2):
         main_joueur.append(tirer_carte(paquet))
         main_croupier.append(tirer_carte(paquet))
@@ -187,48 +259,42 @@ def fin_de_partie():
 
 
 def construire_fenetre(fenetre):
-    """Cree tous les elements graphiques de la fenetre (labels, boutons)."""
-    global label_joueur, label_croupier, label_message, bouton_tirer, bouton_rester
+    """Cree tous les elements graphiques de la fenetre (labels, boutons, zones de cartes)."""
+    global cadre_cartes_joueur, cadre_cartes_croupier
+    global label_score_joueur, label_score_croupier
+    global label_message, bouton_tirer, bouton_rester
 
     fenetre.title("Blackjack")
     fenetre.resizable(False, False)
 
-    tk.Label(fenetre, text="BLACKJACK", font=("Helvetica", 20, "bold"), pady=10).pack()
+    # label du titre
+    tk.Label(
+        fenetre, text="♠ ♥ BLACKJACK ♦ ♣", font=("Helvetica", 20, "bold"), pady=10
+    ).pack()
 
+    # Zone croupier
     tk.Label(fenetre, text="Croupier", font=("Helvetica", 13, "bold")).pack()
-    label_croupier = tk.Label(
-        fenetre,
-        text="",
-        font=("Courier", 11),
-        justify="left",
-        width=35,
-        anchor="w",
-        relief="groove",
-        padx=8,
-        pady=6,
-    )
-    label_croupier.pack(padx=20, pady=4)
+    cadre_cartes_croupier = tk.Frame(fenetre, height=100, pady=6)
+    cadre_cartes_croupier.pack()
+    label_score_croupier = tk.Label(fenetre, text="", font=("Helvetica", 11))
+    label_score_croupier.pack(pady=(0, 10))
 
+    # Zone joueur
     tk.Label(fenetre, text="Joueur", font=("Helvetica", 13, "bold")).pack()
-    label_joueur = tk.Label(
-        fenetre,
-        text="",
-        font=("Courier", 11),
-        justify="left",
-        width=35,
-        anchor="w",
-        relief="groove",
-        padx=8,
-        pady=6,
-    )
-    label_joueur.pack(padx=20, pady=4)
+    cadre_cartes_joueur = tk.Frame(fenetre, height=100, pady=6)
+    cadre_cartes_joueur.pack()
+    label_score_joueur = tk.Label(fenetre, text="", font=("Helvetica", 11))
+    label_score_joueur.pack(pady=(0, 10))
 
-    label_message = tk.Label(fenetre, text="", font=("Helvetica", 12), pady=6)
+    # Message de resultat
+    label_message = tk.Label(fenetre, text="", font=("Helvetica", 12), pady=4)
     label_message.pack()
 
+    # Boutons
     cadre_boutons = tk.Frame(fenetre)
     cadre_boutons.pack(pady=8)
 
+    # lier les boutons avec les fonction du programme
     bouton_tirer = tk.Button(
         cadre_boutons,
         text="Tirer une carte",
@@ -256,6 +322,7 @@ def construire_fenetre(fenetre):
     ).pack(pady=(0, 12))
 
 
+# lancement du programme
 fenetre = tk.Tk()
 construire_fenetre(fenetre)
 nouvelle_partie()
