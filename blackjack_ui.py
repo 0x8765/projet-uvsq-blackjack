@@ -2,7 +2,7 @@
 #
 # Projet Info UVSQ
 # Blackjack
-# Victor, Maceo, Ayah, Sammuel
+# Victor, Maceo, Ayah, Samuel
 #
 ####################
 
